@@ -27,9 +27,9 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
+    "@types/node": "^18.16.3",
     "@types/pluralize": "0.0.29",
     "@types/prettier": "^2.7.2",
-    "@types/node": "^18.16.3",
     "typescript": "^5.0.4"
   }
 }
