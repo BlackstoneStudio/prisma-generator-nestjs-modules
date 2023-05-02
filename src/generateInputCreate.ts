@@ -23,7 +23,7 @@ export const generateInputCreate = (
     namedImports: ['Type'],
   });
 
-  const namedImportsValidator = [];
+  const namedImportsValidator: string[] = [];
   const propertyToClass: OptionalKind<PropertyDeclarationStructure>[] = [];
 
   properties.forEach((prop) => {

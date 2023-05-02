@@ -1,7 +1,7 @@
 import { Project } from 'ts-morph';
 import { DMMF } from './dmmf/types';
 import { camelCase } from './helpers';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 import * as path from 'path';
 
 export const generateApiResponse = (
@@ -9,8 +9,8 @@ export const generateApiResponse = (
   outputDir: string,
   models: Array<DMMF.Model>,
 ) => {
-  let success = [];
-  let errors = [];
+  let success: any[] = [];
+  let errors: any[] = [];
   const dirPath = path.resolve(outputDir, 'utils');
   const filePathSuccess = path.resolve(dirPath, `success.dictionary.ts`);
   const filePathErrors = path.resolve(dirPath, `error.dictionary.ts`);

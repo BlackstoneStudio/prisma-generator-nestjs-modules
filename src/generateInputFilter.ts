@@ -3,7 +3,7 @@ import { OptionalKind, Project, PropertyDeclarationStructure } from 'ts-morph';
 import { DMMF } from './dmmf/types';
 import { camelCase, getArgumentsApi, getType, validPassword } from './helpers';
 
-export const generateInputUpdate = (
+export const generateInputFilter = (
   project: Project,
   outputDir: string,
   model: DMMF.Model,
@@ -13,17 +13,18 @@ export const generateInputUpdate = (
 
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/dto/Update${model.name}.dto.ts`,
+    `${modelName}/dto/Filter${model.name}.dto.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,
   });
+
   sourceFile.addImportDeclaration({
     moduleSpecifier: 'class-transformer',
     namedImports: ['Type'],
   });
 
-  const namedImportsValidator = [];
+  const namedImportsValidator: string[] = [];
   const propertyToClass: OptionalKind<PropertyDeclarationStructure>[] = [];
 
   properties.forEach((prop) => {
@@ -31,20 +32,17 @@ export const generateInputUpdate = (
 
     if (prop.relationName) {
       return;
-    } else {
-      decorators.push({
-        name: 'ApiProperty',
-        arguments: getArgumentsApi(
-          prop.typeGraphQLType,
-          !prop.isRequired || prop.isList,
-        ),
-      });
-
-      decorators.push({
-        name: 'Type',
-        arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
-      });
     }
+
+    decorators.push({
+      name: 'ApiProperty',
+      arguments: getArgumentsApi(prop.typeGraphQLType, false),
+    });
+
+    decorators.push({
+      name: 'Type',
+      arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
+    });
 
     if (prop.name.toLocaleLowerCase().includes('password')) {
       decorators.push({
@@ -53,38 +51,46 @@ export const generateInputUpdate = (
       });
     }
 
-    if (!prop.isRequired || prop.isList) {
-      decorators.push({
-        name: 'IsOptional',
-        arguments: [],
-      });
+    decorators.push({
+      name: 'IsOptional',
+      arguments: [],
+    });
 
-      namedImportsValidator.push('IsOptional');
-    }
-
-    if (prop.fieldTSType === 'string' && prop.isRequired) {
-      decorators.push({
-        name: 'IsNotEmpty',
-        arguments: [],
-      });
-
-      namedImportsValidator.push('IsNotEmpty');
-    }
+    namedImportsValidator.push('IsOptional');
 
     propertyToClass.push({
       name: prop.name,
-      type: prop.relationName
-        ? `Update${prop.type}Dto${prop.isList ? '[]' : ''}`
-        : prop.fieldTSType,
+      type: prop.fieldTSType,
       hasExclamationToken: !!prop.isRequired,
-      hasQuestionToken: !prop.isRequired || prop.isList,
+      hasQuestionToken: true,
       trailingTrivia: '\r\n',
       decorators: decorators,
     });
   });
 
+  propertyToClass.push({
+    name: 'includeDeleted',
+    type: 'boolean',
+    trailingTrivia: '\r\n',
+    hasQuestionToken: true,
+    decorators: [
+      {
+        name: 'ApiProperty',
+        arguments: [`{ type: Boolean }`],
+      },
+      {
+        name: 'Type',
+        arguments: [`() => Boolean`],
+      },
+      {
+        name: 'IsOptional',
+        arguments: [],
+      },
+    ],
+  });
+
   sourceFile.addClass({
-    name: `Update${model.name}Dto`,
+    name: `Filter${model.name}Dto`,
     isExported: true,
     properties: propertyToClass,
   });

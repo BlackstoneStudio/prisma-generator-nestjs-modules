@@ -3,7 +3,7 @@ import { OptionalKind, Project, PropertyDeclarationStructure } from 'ts-morph';
 import { DMMF } from './dmmf/types';
 import { camelCase, getArgumentsApi, getType, validPassword } from './helpers';
 
-export const generateOutput = (
+export const generateInputUpdate = (
   project: Project,
   outputDir: string,
   model: DMMF.Model,
@@ -13,18 +13,17 @@ export const generateOutput = (
 
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/entities/${model.name}.entity.ts`,
+    `${modelName}/dto/Update${model.name}.dto.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,
   });
-
   sourceFile.addImportDeclaration({
     moduleSpecifier: 'class-transformer',
     namedImports: ['Type'],
   });
 
-  const namedImportsValidator = [];
+  const namedImportsValidator: string[] = [];
   const propertyToClass: OptionalKind<PropertyDeclarationStructure>[] = [];
 
   properties.forEach((prop) => {
@@ -32,17 +31,20 @@ export const generateOutput = (
 
     if (prop.relationName) {
       return;
+    } else {
+      decorators.push({
+        name: 'ApiProperty',
+        arguments: getArgumentsApi(
+          prop.typeGraphQLType,
+          !prop.isRequired || prop.isList,
+        ),
+      });
+
+      decorators.push({
+        name: 'Type',
+        arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
+      });
     }
-
-    decorators.push({
-      name: 'ApiProperty',
-      arguments: getArgumentsApi(prop.typeGraphQLType, false),
-    });
-
-    decorators.push({
-      name: 'Type',
-      arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
-    });
 
     if (prop.name.toLocaleLowerCase().includes('password')) {
       decorators.push({
@@ -51,25 +53,38 @@ export const generateOutput = (
       });
     }
 
-    decorators.push({
-      name: 'IsOptional',
-      arguments: [],
-    });
+    if (!prop.isRequired || prop.isList) {
+      decorators.push({
+        name: 'IsOptional',
+        arguments: [],
+      });
 
-    namedImportsValidator.push('IsOptional');
+      namedImportsValidator.push('IsOptional');
+    }
+
+    if (prop.fieldTSType === 'string' && prop.isRequired) {
+      decorators.push({
+        name: 'IsNotEmpty',
+        arguments: [],
+      });
+
+      namedImportsValidator.push('IsNotEmpty');
+    }
 
     propertyToClass.push({
       name: prop.name,
-      type: prop.fieldTSType,
+      type: prop.relationName
+        ? `Update${prop.type}Dto${prop.isList ? '[]' : ''}`
+        : prop.fieldTSType,
       hasExclamationToken: !!prop.isRequired,
-      hasQuestionToken: true,
+      hasQuestionToken: !prop.isRequired || prop.isList,
       trailingTrivia: '\r\n',
       decorators: decorators,
     });
   });
 
   sourceFile.addClass({
-    name: `${model.name}`,
+    name: `Update${model.name}Dto`,
     isExported: true,
     properties: propertyToClass,
   });

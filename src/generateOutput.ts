@@ -3,7 +3,7 @@ import { OptionalKind, Project, PropertyDeclarationStructure } from 'ts-morph';
 import { DMMF } from './dmmf/types';
 import { camelCase, getArgumentsApi, getType, validPassword } from './helpers';
 
-export const generateInputFilter = (
+export const generateOutput = (
   project: Project,
   outputDir: string,
   model: DMMF.Model,
@@ -13,7 +13,7 @@ export const generateInputFilter = (
 
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/dto/Filter${model.name}.dto.ts`,
+    `${modelName}/entities/${model.name}.entity.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,
@@ -24,7 +24,7 @@ export const generateInputFilter = (
     namedImports: ['Type'],
   });
 
-  const namedImportsValidator = [];
+  const namedImportsValidator: string[] = [];
   const propertyToClass: OptionalKind<PropertyDeclarationStructure>[] = [];
 
   properties.forEach((prop) => {
@@ -68,29 +68,8 @@ export const generateInputFilter = (
     });
   });
 
-  propertyToClass.push({
-    name: 'includeDeleted',
-    type: 'boolean',
-    trailingTrivia: '\r\n',
-    hasQuestionToken: true,
-    decorators: [
-      {
-        name: 'ApiProperty',
-        arguments: [`{ type: Boolean }`],
-      },
-      {
-        name: 'Type',
-        arguments: [`() => Boolean`],
-      },
-      {
-        name: 'IsOptional',
-        arguments: [],
-      },
-    ],
-  });
-
   sourceFile.addClass({
-    name: `Filter${model.name}Dto`,
+    name: `${model.name}`,
     isExported: true,
     properties: propertyToClass,
   });

@@ -2,7 +2,7 @@ import * as path from 'path';
 import { Project } from 'ts-morph';
 import { DMMF } from './dmmf/types';
 import { camelCase } from './helpers';
-import * as pluralize from 'pluralize';
+import pluralize from 'pluralize';
 
 export const generateController = (
   project: Project,
