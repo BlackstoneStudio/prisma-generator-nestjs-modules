@@ -148,8 +148,8 @@ function transformInputType(dmmfDocument: DmmfDocument) {
       ...inputType,
       typeName: getInputTypeName(inputType.name, dmmfDocument),
       fields: inputType.fields
-        .filter((field) => field.deprecation === undefined)
-        .map<DMMF.SchemaArg>((field) => {
+        .filter((field: PrismaDMMF.SchemaArg) => field.deprecation === undefined)
+        .map<DMMF.SchemaArg>((field: PrismaDMMF.SchemaArg) => {
           const modelField = modelType?.fields.find(
             (it) => it.name === field.name,
           );
@@ -208,8 +208,8 @@ function transformOutputType(dmmfDocument: DmmfDocument) {
       ...outputType,
       typeName,
       fields: outputType.fields
-        .filter((field) => field.deprecation === undefined)
-        .map<DMMF.OutputSchemaField>((field) => {
+        .filter((field: PrismaDMMF.SchemaField) => field.deprecation === undefined)
+        .map<DMMF.OutputSchemaField>((field: PrismaDMMF.SchemaField) => {
           const isFieldRequired =
             field.isNullable !== true && field.name !== '_count';
           const outputTypeInfo: DMMF.TypeInfo = {
@@ -229,7 +229,7 @@ function transformOutputType(dmmfDocument: DmmfDocument) {
             outputTypeInfo,
             dmmfDocument,
           );
-          const args = field.args.map<DMMF.SchemaArg>((arg) => {
+          const args = field.args.map<DMMF.SchemaArg>((arg: PrismaDMMF.SchemaArg) => {
             const selectedInputType = selectInputTypeFromTypes(dmmfDocument)(
               arg.inputTypes,
             );
@@ -322,7 +322,7 @@ function transformMapping(
         ([actionKind, fieldName]) =>
           fieldName && getOperationKindName(actionKind),
       )
-      .map<DMMF.Action>((action) => {
+      .map<DMMF.Action>((action: [string, string | null]) => {
         const modelAction = action[0];
         const fieldName = action[1] ?? '';
         const kind = modelAction as DMMF.ModelAction;
@@ -497,7 +497,7 @@ export function transformEnums(dmmfDocument: DmmfDocument) {
     );
     if (detectedSuffix) {
       modelName = enumDef.name.replace(detectedSuffix, '');
-      typeName = `${dmmfDocument.getModelTypeName(modelName)}${detectedSuffix}`;
+      typeName = `${dmmfDocument.getModelTypeName(modelName!)}${detectedSuffix}`;
     }
     const enumValues = enumDef.values as Array<
       | PrismaDMMF.DatamodelEnum['values'][number]
