@@ -8,8 +8,8 @@ generatorHandler({
     logger.info(`initial manifest`);
     return {
       version,
-      defaultOutput: '../../_gen/crud',
-      prettyName: 'Generate Custom',
+      defaultOutput: '../generated',
+      prettyName: 'prisma-generator-nestjs-modules',
     };
   },
   onGenerate: generate,
