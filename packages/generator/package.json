@@ -2,7 +2,7 @@
   "name": "prisma-generator-nestjs-modules",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/generator.js",
+  "main": "dist/prisma-generate.js",
   "bin": {
     "prisma-generator-nestjs-modules": "dist/bin.js"
   },
