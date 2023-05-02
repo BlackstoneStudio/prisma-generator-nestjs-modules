@@ -1,4 +1,5 @@
 {
+  "name": "prisma-generator-nestjs-modules",
   "private": true,
   "workspaces": [
     "packages/*"
