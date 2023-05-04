@@ -7,7 +7,7 @@ enum PrismaScalars {
   Boolean = 'Boolean',
   Int = 'Int',
   Float = 'Float',
-  DateTime = 'DateTime',
+  DateTime = 'Date',
   Json = 'Json',
   BigInt = 'BigInt',
   Decimal = 'Decimal',
