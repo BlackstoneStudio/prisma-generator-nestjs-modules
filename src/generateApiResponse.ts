@@ -47,43 +47,43 @@ export const generateApiResponse = (
       ...success,
       ...[
         `CREATE_${modelNameUpper}: {
-        description: "Create ${modelName}.",
+        description: 'Create ${modelName}.',
         status: 200,
         type: ${model.name},
         isArray: false,
       }`,
         `GET_ALL_${pluralize(modelNameUpper)}: {
-        description: "Get all ${pluralize(modelName)}.",
+        description: 'Get all ${pluralize(modelName)}.',
         status: 200,
         type: ${model.name},
         isArray: true,
       }`,
         `FILTER_${pluralize(modelNameUpper)}: {
-        description: "Filter ${pluralize(modelName)}.",
+        description: 'Filter ${pluralize(modelName)}.',
         status: 200,
         type: ${model.name},
         isArray: true,
       }`,
         `GET_${modelNameUpper}_BY_ID: {
-        description: "Get ${modelName} by ID.",
+        description: 'Get ${modelName} by ID.',
         status: 200,
         type: ${model.name},
         isArray: false,
       }`,
         `UPDATE_${modelNameUpper}: {
-        description: "Update ${modelName}.",
+        description: 'Update ${modelName}.',
         status: 200,
         type: ${model.name},
         isArray: false,
       }`,
         `UPDATE_MANY_${pluralize(modelNameUpper)}: {
-        description: "Update ${pluralize(modelNameUpper)}.",
+        description: 'Update ${pluralize(modelNameUpper)}.',
         status: 200,
         type: ${model.name},
         isArray: false,
       }`,
         `DELETE_${modelNameUpper}: {
-        description: "DELETE ${modelName}.",
+        description: 'DELETE ${modelName}.',
         status: 200,
         type: ${model.name},
         isArray: false,
@@ -95,27 +95,27 @@ export const generateApiResponse = (
       ...errors,
       ...[
         `CREATE_${modelNameUpper}_FAILED: {
-        description: "Create ${modelName}.",
+        description: 'Create ${modelName}.',
         status: 400,
       }`,
         `GET_ALL_${pluralize(modelNameUpper)}_NOT_FOUND: {
-        description: "${pluralize(modelName)} not found.",
+        description: '${pluralize(modelName)} not found.',
         status: 404,
       }`,
         `FILTER_${pluralize(modelNameUpper)}_NOT_FOUND: {
-        description: "${pluralize(modelName)} not found.",
+        description: '${pluralize(modelName)} not found.',
         status: 404,
       }`,
         `GET_${modelNameUpper}_BY_ID_NOT_FOUND: {
-        description: "${modelName} not found.",
+        description: '${modelName} not found.',
         status: 404,
       }`,
         `UPDATE_${modelNameUpper}_NOT_FOUND: {
-        description: "Update ${modelName} not found.",
+        description: 'Update ${modelName} not found.',
         status: 404,
       }`,
         `DELETE_${modelNameUpper}_NOT_FOUND: {
-        description: "${modelName} not found.",
+        description: '${modelName} not found.',
         status: 404,
       }`,
       ],
@@ -123,7 +123,10 @@ export const generateApiResponse = (
   });
 
   sourceFileSuccess.addStatements([
-    `const Success = ApiResponses({
+    `import { ApiResponses } from '../../../utils/entities/response.entity';
+    ${models.map((model) => `import { ${model.name} } from '../${camelCase(model.name)}/entities/${model.name}.entity';`).join(`\t\n`)}
+
+    const Success = ApiResponses({
       ${success.join(',\t\n')}
     });
     
@@ -131,28 +134,28 @@ export const generateApiResponse = (
   ]);
 
   sourceFileError.addStatements([
-    `import { ApiResponses, ValidationError } from "../../../utils/entities/response.entity";
+    `import { ApiResponses, ValidationError } from '../../../utils/entities/response.entity';
 
     const Errors = ApiResponses({
       VALIDATION_ERROR: {
         status: 400,
-        description: "Validation error.",
+        description: 'Validation error.',
         type: ValidationError,
       },
       UNKNOWN_ERROR: {
         status: 500,
-        description: "Unknown error.",
+        description: 'Unknown error.',
         type: Response,
       },
       UNAUTHORIZED: {
         status: 401,
-        description: "Unauthorized.",
+        description: 'Unauthorized.',
         type: Response,
       },
       ${errors.join(',\t\n')}
     });
     
-    const NotTypeError = (error: ApiResponseMetadata): Omit<ApiResponseMetadata, "type"> => {
+    const NotTypeError = (error: ApiResponseMetadata): Omit<ApiResponseMetadata, 'type'> => {
       delete error.type;
       return error;
     };
