@@ -118,9 +118,16 @@ export function getTypeGraphQLType(
   dmmfDocument: DmmfDocument,
   modelName?: string,
   typeName?: string,
+  isIdField?: boolean,
 ) {
   let GraphQLType: string = typeInfo.type;
-  if (
+  if (typeInfo.location === 'scalar') {
+    GraphQLType = mapScalarToTypeGraphQLType(
+      typeInfo.type,
+      dmmfDocument.options.emitIdAsIDType,
+      isIdField,
+    );
+  } else if (
     (typeInfo.location === 'inputObjectTypes' ||
       typeInfo.location === 'outputObjectTypes') &&
     (!typeName || !modelName) &&
@@ -132,6 +139,44 @@ export function getTypeGraphQLType(
     GraphQLType = `[${GraphQLType}]`;
   }
   return GraphQLType;
+}
+
+export function mapScalarToTypeGraphQLType(
+  scalar: string,
+  emitIdAsIDType: boolean | undefined,
+  isIdField?: boolean,
+) {
+  if (emitIdAsIDType && isIdField) {
+    return `NestJsGraphQL.ID`;
+  }
+  switch (scalar) {
+    case PrismaScalars.String:
+    case PrismaScalars.Boolean: {
+      return scalar;
+    }
+    case PrismaScalars.Int:
+    case PrismaScalars.Float: {
+      return `NestJsGraphQL.${scalar}`;
+    }
+    case PrismaScalars.DateTime: {
+      return 'Date';
+    }
+    case PrismaScalars.Json: {
+      return `GraphQLScalars.JSONResolver`;
+    }
+    case PrismaScalars.BigInt: {
+      return 'GraphQLScalars.BigIntResolver';
+    }
+    case PrismaScalars.Decimal: {
+      return 'DecimalJSScalar';
+    }
+    case PrismaScalars.Bytes: {
+      return 'GraphQLScalars.ByteResolver';
+    }
+    default: {
+      throw new Error(`Unrecognized scalar type: ${scalar}`);
+    }
+  }
 }
 
 export function camelCase(str: string) {

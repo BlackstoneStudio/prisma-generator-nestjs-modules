@@ -110,6 +110,7 @@ function transformModelField(dmmfDocument: DmmfDocument) {
       dmmfDocument,
       undefined,
       undefined,
+      field.isId
     );
     const { output = false, input = false } = parseDocumentationAttributes<{
       output: boolean;
