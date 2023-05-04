@@ -36,12 +36,12 @@ export const generateOutput = (
 
     decorators.push({
       name: 'ApiProperty',
-      arguments: getArgumentsApi(prop.fieldTSType, false),
+      arguments: getArgumentsApi(prop.typeGraphQLType, false),
     });
 
     decorators.push({
       name: 'Type',
-      arguments: getType(prop.fieldTSType, prop.location === 'enumTypes'),
+      arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
     });
 
     if (prop.name.toLocaleLowerCase().includes('password')) {
@@ -60,7 +60,7 @@ export const generateOutput = (
 
     propertyToClass.push({
       name: prop.name,
-      type: prop.fieldTSType,
+      type: prop.typeGraphQLType,
       hasExclamationToken: !!prop.isRequired,
       hasQuestionToken: true,
       trailingTrivia: '\r\n',

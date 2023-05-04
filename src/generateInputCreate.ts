@@ -71,14 +71,14 @@ export const generateInputCreate = (
       decorators.push({
         name: 'ApiProperty',
         arguments: getArgumentsApi(
-          prop.fieldTSType,
+          prop.typeGraphQLType,
           !prop.isRequired || prop.isList,
         ),
       });
 
       decorators.push({
         name: 'Type',
-        arguments: getType(prop.fieldTSType, prop.location === 'enumTypes'),
+        arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
       });
     }
 
@@ -98,7 +98,7 @@ export const generateInputCreate = (
       namedImportsValidator.push('IsOptional');
     }
 
-    if (prop.fieldTSType === 'string' && prop.isRequired) {
+    if (prop.typeGraphQLType === 'string' && prop.isRequired) {
       decorators.push({
         name: 'IsNotEmpty',
         arguments: [],
@@ -111,7 +111,7 @@ export const generateInputCreate = (
       name: prop.name,
       type: prop.relationName
         ? `Create${prop.type}Dto${prop.isList ? '[]' : ''}`
-        : prop.fieldTSType,
+        : prop.typeGraphQLType,
       hasExclamationToken: !!prop.isRequired,
       hasQuestionToken: !prop.isRequired || prop.isList,
       trailingTrivia: '\r\n',
