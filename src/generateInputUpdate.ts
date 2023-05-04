@@ -62,7 +62,7 @@ export const generateInputUpdate = (
       namedImportsValidator.push('IsOptional');
     }
 
-    if (prop.typeGraphQLType === 'string' && prop.isRequired) {
+    if (prop.fieldTSType === 'string' && prop.isRequired) {
       decorators.push({
         name: 'IsNotEmpty',
         arguments: [],
@@ -75,7 +75,7 @@ export const generateInputUpdate = (
       name: prop.name,
       type: prop.relationName
         ? `Update${prop.type}Dto${prop.isList ? '[]' : ''}`
-        : prop.typeGraphQLType,
+        : prop.fieldTSType,
       hasExclamationToken: !!prop.isRequired,
       hasQuestionToken: !prop.isRequired || prop.isList,
       trailingTrivia: '\r\n',

@@ -60,7 +60,7 @@ export const generateOutput = (
 
     propertyToClass.push({
       name: prop.name,
-      type: prop.typeGraphQLType,
+      type: prop.fieldTSType,
       hasExclamationToken: !!prop.isRequired,
       hasQuestionToken: true,
       trailingTrivia: '\r\n',
