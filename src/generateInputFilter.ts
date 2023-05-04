@@ -36,12 +36,12 @@ export const generateInputFilter = (
 
     decorators.push({
       name: 'ApiProperty',
-      arguments: getArgumentsApi(prop.typeGraphQLType, false),
+      arguments: getArgumentsApi(prop.fieldTSType, false),
     });
 
     decorators.push({
       name: 'Type',
-      arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
+      arguments: getType(prop.fieldTSType, prop.location === 'enumTypes'),
     });
 
     if (prop.name.toLocaleLowerCase().includes('password')) {

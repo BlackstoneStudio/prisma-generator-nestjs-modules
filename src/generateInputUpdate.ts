@@ -35,14 +35,14 @@ export const generateInputUpdate = (
       decorators.push({
         name: 'ApiProperty',
         arguments: getArgumentsApi(
-          prop.typeGraphQLType,
+          prop.fieldTSType,
           !prop.isRequired || prop.isList,
         ),
       });
 
       decorators.push({
         name: 'Type',
-        arguments: getType(prop.typeGraphQLType, prop.location === 'enumTypes'),
+        arguments: getType(prop.fieldTSType, prop.location === 'enumTypes'),
       });
     }
 
