@@ -1,6 +1,6 @@
 import { Project } from 'ts-morph';
 import { DMMF } from './dmmf/types';
-import { camelCase } from './helpers';
+import { camelCase, snakeCase } from './helpers';
 import pluralize from 'pluralize';
 import * as path from 'path';
 
@@ -124,7 +124,7 @@ export const generateApiResponse = (
 
   sourceFileSuccess.addStatements([
     `import { ApiResponses } from '../../../utils/entities/response.entity';
-    ${models.map((model) => `import { ${model.name} } from '../${camelCase(model.name)}/entities/${model.name}.entity';`).join(`\t\n`)}
+    ${models.map((model) => `import { ${model.name} } from '../${snakeCase(model.name)}/entities/${snakeCase(model.name)}.entity';`).join(`\t\n`)}
 
     const Success = ApiResponses({
       ${success.join(',\t\n')}
