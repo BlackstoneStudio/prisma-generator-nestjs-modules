@@ -24,7 +24,7 @@ export const generateService = (
     import { Create${model.name}Dto } from './dto/create-${pathName}.dto';
     import { Update${model.name}Dto } from './dto/update-${pathName}.dto';
     import { Filter${model.name}Dto } from './dto/filter-${pathName}.dto';
-    import { UpdateMany${model.name}Dto } from './dto/update-many${pathName}.dto';
+    import { UpdateMany${model.name}Dto } from './dto/update-many-${pathName}.dto';
     import { ${model.name} } from './entities/${pathName}.entity';
     
     @Injectable()
