@@ -156,19 +156,19 @@ export function mapScalarToTypeGraphQLType(
     }
     case PrismaScalars.Int:
     case PrismaScalars.Float: {
-      return `NestJsGraphQL.${scalar}`;
+      return `Number`;
     }
     case PrismaScalars.DateTime: {
       return 'Date';
     }
     case PrismaScalars.Json: {
-      return `GraphQLScalars.JSONResolver`;
+      return `Object`;
     }
     case PrismaScalars.BigInt: {
-      return 'GraphQLScalars.BigIntResolver';
+      return 'Number';
     }
     case PrismaScalars.Decimal: {
-      return 'DecimalJSScalar';
+      return 'Number';
     }
     case PrismaScalars.Bytes: {
       return 'GraphQLScalars.ByteResolver';
