@@ -1,19 +1,19 @@
 import * as path from 'path';
 import { OptionalKind, Project, PropertyDeclarationStructure } from 'ts-morph';
 import { DMMF } from './dmmf/types';
-import { camelCase, getArgumentsApi, getType, validPassword } from './helpers';
+import { getArgumentsApi, getType, snakeCase, validPassword } from './helpers';
 
 export const generateInputCreate = (
   project: Project,
   outputDir: string,
   model: DMMF.Model,
 ) => {
-  const modelName = camelCase(model.name);
+  const pathName = snakeCase(model.name);
   const properties = model.fields;
 
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/dto/Create${model.name}.dto.ts`,
+    `${pathName}/dto/create-${pathName}.dto.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,
@@ -35,8 +35,8 @@ export const generateInputCreate = (
 
     if (prop.relationName) {
       sourceFile.addImportDeclaration({
-        moduleSpecifier: `../../${camelCase(prop.type)}/dto/Create${
-          prop.type
+        moduleSpecifier: `../../${snakeCase(prop.type)}/dto/create-${
+          snakeCase(prop.type)
         }.dto`,
         namedImports: [`Create${prop.type}Dto`],
       });

@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { Project } from 'ts-morph';
 import { DMMF } from './dmmf/types';
-import { camelCase } from './helpers';
+import { camelCase, snakeCase } from './helpers';
 
 export const generateService = (
   project: Project,
@@ -9,9 +9,10 @@ export const generateService = (
   model: DMMF.Model,
 ) => {
   const modelName = camelCase(model.name);
+  const pathName = snakeCase(model.name);
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/${modelName}.service.ts`,
+    `${pathName}/${pathName}.service.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,
@@ -20,11 +21,11 @@ export const generateService = (
   sourceFile.addStatements(`import { Injectable } from '@nestjs/common';
     import { PrismaService } from '../../../modules/shared/prisma/prisma.service';
     import { Prisma } from '@prisma/client';
-    import { Create${model.name}Dto } from './dto/Create${model.name}.dto';
-    import { Update${model.name}Dto } from './dto/Update${model.name}.dto';
-    import { Filter${model.name}Dto } from './dto/Filter${model.name}.dto';
-    import { UpdateMany${model.name}Dto } from './dto/UpdateMany${model.name}.dto';
-    import { ${model.name} } from './entities/${model.name}.entity';
+    import { Create${model.name}Dto } from './dto/create-${pathName}.dto';
+    import { Update${model.name}Dto } from './dto/update-${pathName}.dto';
+    import { Filter${model.name}Dto } from './dto/filter-${pathName}.dto';
+    import { UpdateMany${model.name}Dto } from './dto/update-many${pathName}.dto';
+    import { ${model.name} } from './entities/${pathName}.entity';
     
     @Injectable()
     export class ${model.name}Service {

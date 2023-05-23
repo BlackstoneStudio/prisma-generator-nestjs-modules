@@ -1,19 +1,19 @@
 import * as path from 'path';
 import { OptionalKind, Project, PropertyDeclarationStructure } from 'ts-morph';
 import { DMMF } from './dmmf/types';
-import { camelCase, getArgumentsApi, getType, validPassword } from './helpers';
+import { getArgumentsApi, getType, snakeCase, validPassword } from './helpers';
 
 export const generateInputFilter = (
   project: Project,
   outputDir: string,
   model: DMMF.Model,
 ) => {
-  const modelName = camelCase(model.name);
+  const pathName = snakeCase(model.name);
   const properties = model.fields;
 
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/dto/Filter${model.name}.dto.ts`,
+    `${pathName}/dto/filter-${pathName}.dto.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,

@@ -1,17 +1,17 @@
 import * as path from 'path';
 import { Project } from 'ts-morph';
 import { DMMF } from './dmmf/types';
-import { camelCase } from './helpers';
+import { snakeCase } from './helpers';
 
 export const generateInputUpdateMany = (
   project: Project,
   outputDir: string,
   model: DMMF.Model,
 ) => {
-  const modelName = camelCase(model.name);
+  const pathName = snakeCase(model.name);
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/dto/UpdateMany${model.name}.dto.ts`,
+    `${pathName}/dto/update-many-${pathName}.dto.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,

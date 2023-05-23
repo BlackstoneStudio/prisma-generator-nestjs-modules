@@ -1,7 +1,7 @@
 import * as path from 'path';
 import { Project } from 'ts-morph';
 import { DMMF } from './dmmf/types';
-import { camelCase } from './helpers';
+import { camelCase, snakeCase } from './helpers';
 import pluralize from 'pluralize';
 
 export const generateController = (
@@ -10,10 +10,11 @@ export const generateController = (
   model: DMMF.Model,
 ) => {
   const modelName = camelCase(model.name);
+  const pathName = snakeCase(model.name);
   const modelNameUpper = modelName.toLocaleUpperCase();
   const filePath = path.resolve(
     outputDir,
-    `${modelName}/${modelName}.controller.ts`,
+    `${pathName}/${pathName}.controller.ts`,
   );
   const sourceFile = project.createSourceFile(filePath, undefined, {
     overwrite: true,
@@ -35,13 +36,13 @@ export const generateController = (
     } from '@nestjs/common';
     import Success from '../utils/success.dictionary';
     import Errors, { CommonErrosResposes } from '../utils/error.dictionary';
-    import { Create${model.name}Dto } from './dto/Create${model.name}.dto';
-    import { Update${model.name}Dto } from './dto/Update${model.name}.dto';
-    import { UpdateMany${model.name}Dto } from './dto/UpdateMany${
-    model.name
-  }.dto';
-    import { ${model.name}Service } from './${modelName}.service';
-    import { Filter${model.name}Dto } from './dto/Filter${model.name}.dto';
+    import { Create${model.name}Dto } from './dto/create-${pathName}.dto';
+    import { Update${model.name}Dto } from './dto/update-${pathName}.dto';
+    import { UpdateMany${model.name}Dto } from './dto/update-many${
+      pathName
+    }.dto';
+    import { ${model.name}Service } from './${pathName}.service';
+    import { Filter${model.name}Dto } from './dto/filter-${pathName}.dto';
     
     @ApiTags('${modelName}')
     @Controller('${modelName}')

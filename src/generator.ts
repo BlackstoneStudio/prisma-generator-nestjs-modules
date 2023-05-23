@@ -5,9 +5,9 @@ import * as fs from 'fs';
 import { DmmfDocument } from './dmmf/dmmfDocument';
 import { ModuleKind, Project, ScriptTarget } from 'ts-morph';
 import {
-  camelCase,
   parseStringArray,
   parseStringBoolean,
+  snakeCase,
   toUnixPath,
 } from './helpers';
 import { ALL_EMIT_BLOCK_KINDS, getBlocksToEmit } from './options';
@@ -88,11 +88,11 @@ export async function generate(options: GeneratorOptions) {
   generateApiResponse(project, outputDir, dmmfDocument.datamodel.models);
 
   dmmfDocument.datamodel.models.forEach((model) => {
-    const modelName = camelCase(model.name);
+    const pathName = snakeCase(model.name);
 
     const filePath = path.resolve(
       outputDir,
-      `${modelName}/${modelName}.module.ts`,
+      `${pathName}/${pathName}.module.ts`,
     );
 
     if (fs.existsSync(filePath)) {
