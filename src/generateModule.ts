@@ -17,9 +17,9 @@ export const generateModule = (
     overwrite: true,
   });
 
-  sourceFile.addStatements(`import { Module } from '@nestjs/common'
-    import { ${model.name}Service } from './${pathName}.service'
-    import { ${model.name}Controller } from './${pathName}.controller'
+  sourceFile.addStatements(`import { Module } from '@nestjs/common';
+    import { ${model.name}Service } from './${pathName}.service';
+    import { ${model.name}Controller } from './${pathName}.controller';
     
     @Module({
       providers: [${model.name}Service],

@@ -38,7 +38,7 @@ export const generateController = (
     import Errors, { CommonErrosResposes } from '../utils/error.dictionary';
     import { Create${model.name}Dto } from './dto/create-${pathName}.dto';
     import { Update${model.name}Dto } from './dto/update-${pathName}.dto';
-    import { UpdateMany${model.name}Dto } from './dto/update-many${
+    import { UpdateMany${model.name}Dto } from './dto/update-many-${
       pathName
     }.dto';
     import { ${model.name}Service } from './${pathName}.service';
