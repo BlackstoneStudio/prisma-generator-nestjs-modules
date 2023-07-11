@@ -353,7 +353,7 @@ export function getType(type?: string | undefined, isEnum?: boolean) {
   const args: string[] = [];
 
   if (type) {
-    args.push(`() => ${isEnum ? 'String' : type}`);
+    args.push(`() => ${isEnum ? 'String' : type.replace(/(\[|\])/gm, '')}`);
   }
 
   return args;
